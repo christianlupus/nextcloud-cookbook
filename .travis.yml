@@ -48,7 +48,7 @@ before_script:
     # Do some debugging output
     - pwd
     - ls -lh
-    - tree
+    #- tree
     # Continue with work
     - ./occ maintenance:install -vvv --no-interaction --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database $DB --database-pass='pass' --database-host localhost
     - ./occ app:enable cookbook

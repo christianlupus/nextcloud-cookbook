@@ -14,6 +14,7 @@
 	                <p v-if="$store.state.recipe.url">
 	                    <strong>{{ t('cookbook', 'Source') }}: </strong><a target="_blank" :href="$store.state.recipe.url" class='source-url'>{{ $store.state.recipe.url }}</a>
 	                </p>
+	                <p><button @click='showVideo'>{{ t('cookbook', 'Show video') }}</button></p>
 	                <p><strong>{{ t('cookbook', 'Servings') }}: </strong>{{ $store.state.recipe.recipeYield }}</p>
 	            </div>
 	            <div class="times">
@@ -49,6 +50,17 @@
                 </main>
             </section>
         </div>
+        
+        <div class='video-overlay' v-if='showVideoOverlay'>
+        	<div class='video-background'></div>
+        	<div class='video-canvas'>
+        		<button @click='hideVideo'></button>
+        		<video controls>
+        			<source :src='videoURL'>
+        			Your browser does not support video playback.
+        		</video>
+        	</div>
+        </div>
     </div>
 </template>
 
@@ -78,6 +90,8 @@ export default {
             timerPrep: null,
             timerTotal: null,
             tools: [],
+            showVideoOverlay: false,
+            videoURL: 'https://banzai-pmd-meride-tv.akamaized.net/amets/giallozafferano/2017/01/x527zw/x527zw.mp4',
         }
     },
     methods: {
@@ -153,6 +167,13 @@ export default {
 
                 alert(t('cookbook', 'Loading recipe failed'))
             })
+        },
+        
+        showVideo: function() {
+        	this.showVideoOverlay = true
+        },
+        hideVideo: function() {
+        	this.showVideoOverlay = false
         }
     },
     mounted () {
@@ -262,6 +283,45 @@ aside {
     div.meta {
     	margin: 0 5px;
     }
+
+div.video-overlay {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	left: 0px;
+	top: 0px;
+	z-index: 1000;
+}
+
+div.video-background {
+	width: 100%;
+	height: 100%;
+	background-color: white;
+	opacity: 80%;
+}
+
+div.video-canvas {
+	position: absolute;
+	width: 70%;
+	height: 70%;
+	
+	top: 15%;
+	left: 15%;
+	
+	opacity: 100%;
+	background-color: red;
+}
+
+div.video-canvas > button {
+	position: absolute;
+	right: 0px;
+}
+
+div.video-canvas > video {
+	margin-top: 2.5em;
+	width: 100%;
+	height: calc(100% - 2.5em);
+}
 
 @media print {
     #content {

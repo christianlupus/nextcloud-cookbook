@@ -25,6 +25,9 @@
   [#375](https://github.com/nextcloud/cookbook/pull/375/) @seyfeb
 - Service to handle schema.org JSON data in strings easier
   [#383](https://github.com/nextcloud/cookbook/pull/383/) @christianlupus
+- Support for dateCreated and dateModified field of schema.org Recipe
+  [#377](https://github.com/nextcloud/cookbook/pull/366/) @seyfeb
+
 
 ### Changed
 - Switch of project ownership to neextcloud organization in GitHub

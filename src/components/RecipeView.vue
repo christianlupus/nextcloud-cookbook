@@ -15,6 +15,16 @@
                         <RecipeKeyword v-for="(keyword,idx) in keywords" :key="'keyw'+idx" :keyword="keyword"  v-on:keyword-clicked="keywordClicked(keyword)" />
                     </ul>
                 </p>
+                <p class="dates">
+                    <span v-if="showCreatedDate" class="date" title="Date created">
+                        <span class="icon-calendar-dark date-icon" />
+                        <span class="date-text">{{ dateCreated }}</span>
+                    </span>
+                    <span v-if="showModifiedDate" class="date" title="Last modified">
+                        <span class="icon-rename date-icon" />
+                        <span class="date-text">{{ dateModified }}</span>
+                    </span>
+                </p>
 	                <p class="description">{{ $store.state.recipe.description }}</p>
 	                <p v-if="$store.state.recipe.url">
 	                    <strong>{{ t('cookbook', 'Source') }}: </strong><a target="_blank" :href="$store.state.recipe.url" class='source-url'>{{ $store.state.recipe.url }}</a>
@@ -59,6 +69,8 @@
 
 <script>
 
+import moment from '@nextcloud/moment'
+
 import RecipeImages from './RecipeImages'
 import RecipeIngredient from './RecipeIngredient'
 import RecipeInstruction from './RecipeInstruction'
@@ -86,7 +98,29 @@ export default {
             timerPrep: null,
             timerTotal: null,
             tools: [],
+            dateCreated: null,
+            dateModified: null,
         }
+    },
+    computed: {
+        showModifiedDate: function() {
+            if (!this.dateModified) {  
+                return false
+            }
+            else if ( this.$store.state.recipe.dateCreated
+                && this.$store.state.recipe.dateModified
+                && this.$store.state.recipe.dateCreated === this.$store.state.recipe.dateModified) {
+                // don't show modified date if create and modified timestamp are the same
+                return false
+            }
+            return true
+        },
+        showCreatedDate: function() {
+            if (!this.dateCreated) {  
+                return false
+            }
+            return true
+        },
     },
     methods: {
         /**
@@ -96,6 +130,17 @@ export default {
             if(keyword) {
                 this.$router.push('/tags/'+keyword);
             }
+        },
+        /* The schema.org standard requires the dates formatted as Date (https://schema.org/Date) 
+         * or DateTime (https://schema.org/DateTime). This follows the ISO 8601 standard.
+         */
+        parseDateTime: function(dt) {
+            if (!dt) return null;
+            var date = moment(dt, moment.ISO_8601)
+            if(!date.isValid()) {
+                return null;
+            }
+            return date
         },
         setup: function() {
             // Make the control row show that a recipe is loading
@@ -155,6 +200,16 @@ export default {
                     $this.tools = $this.$store.state.recipe.tool
                 }
 
+                if ($this.$store.state.recipe.dateCreated) {
+                    let date = $this.parseDateTime($this.$store.state.recipe.dateCreated)
+                    $this.dateCreated = (date != null ? date.format('L, LT').toString() : null)
+                }
+                
+                if ($this.$store.state.recipe.dateModified) {
+                    let date = $this.parseDateTime($this.$store.state.recipe.dateModified)
+                    $this.dateModified = (date != null ? date.format('L, LT').toString() : null)
+                }
+
                 // Always set the active page last!
                 $this.$store.dispatch('setPage', { page: 'recipe' })
 
@@ -205,6 +260,7 @@ export default {
 
 <style scoped>
 
+
 .wrapper {
     width: 100%;
 }
@@ -243,6 +299,22 @@ aside {
         width: 100%;
     } }
 
+        .dates {
+            font-size: .9em;
+        }
+            .date {
+                margin-right: 1.5em;
+            }
+                .date-icon {
+                    display: inline-block;
+                    background-size: 1em;
+                    margin-right: .2em;
+                    vertical-align: middle;
+                    margin-bottom: .2em;
+                } 
+                .date-text {
+                    vertical-align: middle;
+                } 
         .description {
             font-style: italic;
             white-space: pre-line;

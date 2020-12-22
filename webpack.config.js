@@ -79,5 +79,10 @@ module.exports = {
         ],
         symlinks: false,
     },
-
+    optimization: {
+        splitChunks: {
+            chunks: 'all',
+            minChunks: 1,
+        },
+    },
 }

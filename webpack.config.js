@@ -5,6 +5,7 @@
  *  are located in the appropriate files.
  */
 const path = require('path')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
 var LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 
@@ -69,6 +70,7 @@ module.exports = {
         ],
     },
     plugins: [
+        new CleanWebpackPlugin(),
         new VueLoaderPlugin(),
         new LodashModuleReplacementPlugin
     ],

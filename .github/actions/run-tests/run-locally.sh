@@ -590,9 +590,13 @@ if [ $DOCKER_PULL = 'y' ]; then
 	pull_images
 fi
 
+docker images
+
 if [ $CREATE_IMAGES = 'y' ]; then
 	build_images
 fi
+
+docker images
 
 if [ $CREATE_IMAGES_IF_NEEDED = 'y' ]; then
 	if ! is_image_exists; then

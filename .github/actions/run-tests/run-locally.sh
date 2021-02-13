@@ -45,6 +45,8 @@ pull_images() {
 	echo 'Pulling pre-built images.'
 	docker-compose pull --quiet
 	
+	docker images
+	
 	if docker pull "nextcloudcookbook/testci:php$PHP_VERSION"; then
 		docker tag "nextcloudcookbook/testci:php$PHP_VERSION" cookbook_unittesting_dut
 	fi
@@ -60,6 +62,8 @@ build_images() {
 	if [ -n "$CI" ]; then
 		PROGRESS='--progress plain'
 	fi
+
+	echo "Value of COMPOSE_DOCKER_CLI_BUILD: $COMPOSE_DOCKER_CLI_BUILD"
 	
 	docker-compose build --pull --force-rm $PROGRESS \
 		--build-arg PHPVERSION=$PHP_VERSION \

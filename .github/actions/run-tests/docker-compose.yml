@@ -16,6 +16,7 @@ services:
             - ./volumes/postgres:/var/lib/postgresql/data
     
     dut: &dut
+        image: nextcloudcookbook/testci:php${PHP_VERSION}
         build:
             context: ./tests
             #args:
